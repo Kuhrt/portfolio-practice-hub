@@ -1,0 +1,1 @@
+from .keycloak_config import keycloak_config

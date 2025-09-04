@@ -1,0 +1,99 @@
+[MASTER]
+# Python version
+py-version = 3.12
+
+# Use multiple processes to speed up Pylint
+jobs = 0
+
+# List of plugins to load
+load-plugins =
+
+[MESSAGES CONTROL]
+# Enable all standard categories but disable docstring-related checks.
+enable=c-extension-no-member,
+       useless-suppression
+
+# Disable some docstring requirements (no mandatory comments).
+disable=missing-module-docstring,
+        missing-class-docstring,
+        # missing-function-docstring, # require function docstrings for fly-over help
+        # Keep these disabled if you don't want refactor suggestions by default.
+        fixme
+# But enable key conventions explicitly if needed (Pylint enables most by default).
+
+# Explicitly enable checks for naming conventions (casing) and indentation.
+# These are part of 'C' category, which is enabled by default, but we ensure:
+# invalid-name: Checks variable, constant, global casing.
+# bad-indentation, missing-whitespace, unexpected-spaces, etc., for indentation/spacing.
+
+# Disable specific warnings that are often too strict for modern Python
+disable =
+    C0114,  # missing-module-docstring
+    C0115,  # missing-class-docstring
+    C0116,  # missing-function-docstring
+    C0103,  # invalid-name (too strict for modern naming conventions)
+    R0903,  # too-few-public-methods
+    R0913,  # too-many-arguments
+    R0914,  # too-many-locals
+    R0915,  # too-many-statements
+    W0621,  # redefined-outer-name (common in pytest fixtures)
+    W0622,  # redefined-builtin
+    W0703,  # broad-except
+    W0612,  # unused-variable
+    W0611,  # unused-import
+    C0301,  # line-too-long (let Black handle this)
+    C0330,  # bad-continuation (let Black handle this)
+    C0326   # bad-whitespace (let Black handle this)
+
+[FORMAT]
+# Enforce PEP 8 indentation: 4 spaces.
+indent-string='    '
+indent-after-paren=4
+# Max line length (PEP 8 recommends 79, but 88 is common for Black compatibility).
+max-line-length=88
+
+[VARIABLES]
+# Naming patterns (enforce snake_case for variables, UPPER for constants).
+variable-rgx=[a-z_][a-z0-9_]{2,30}$
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+[DESIGN]
+# Maximum number of arguments for function / method
+max-args = 10
+
+# Maximum number of attributes for a class
+max-attributes = 10
+
+# Maximum number of boolean expressions in an if statement
+max-bool-expr = 5
+
+# Maximum number of branch for function / method body
+max-branches = 12
+
+# Maximum number of locals for function / method body
+max-locals = 15
+
+# Maximum number of parents for a class
+max-parents = 7
+
+# Maximum number of public methods for a class
+max-public-methods = 20
+
+# Maximum number of return / yield for function / method body
+max-returns = 6
+
+# Maximum number of statements in function / method body
+max-statements = 50
+
+[SIMILARITIES]
+# Minimum lines number of a similarity
+min-similarity-lines = 4
+
+# Ignore imports when computing similarities
+ignore-imports = yes
+
+# Ignore docstrings when computing similarities
+ignore-docstrings = yes
+
+# Ignore comments when computing similarities
+ignore-comments = yes
