@@ -1,0 +1,3 @@
+.tools/*
+!.tools/docker-compose.yml
+!.tools/init-scripts
