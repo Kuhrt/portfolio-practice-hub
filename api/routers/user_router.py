@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter, Depends
 
 from adapters.http.user_service_http_adapter import get_user_http_service
-from models.common import User
+from models.common.user_models import User
 from schemas.common import (
     UserProfileResponse,
     UserSettingsResponse,

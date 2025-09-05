@@ -26,6 +26,7 @@ class UserAlreadyExistsError(UserServiceError):
     def __init__(self, identifier: str, identifier_type: str = "keycloak_user_id"):
         self.identifier = identifier
         self.identifier_type = identifier_type
+        self.user_id = identifier  # Set user_id for compatibility
         super().__init__(
             f"User with {identifier_type} {identifier} already exists", identifier
         )

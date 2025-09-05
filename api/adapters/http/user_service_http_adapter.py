@@ -10,7 +10,7 @@ from exceptions.common import (
     UserSettingsServiceError,
     UserSettingsValidationError,
 )
-from models.common import User
+from models.common.user_models import User
 from schemas.common import (
     UserProfileResponse,
     UserProfileUpdate,

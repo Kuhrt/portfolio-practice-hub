@@ -16,7 +16,7 @@ from exceptions.common import (
 from middleware.auth_middleware import get_keycloak_user
 from models.auth import KeycloakUser
 from models.common import User, UserSettings
-from schemas.common import UserProfileUpdate, UserSettingsUpdate
+from schemas.common import UserProfileUpdate
 from services import get_db, get_redis
 
 logger = logging.getLogger(__name__)
@@ -39,9 +39,9 @@ class UserService:
             if not keycloak_user.email:
                 raise UserDataValidationError("Email is required", "email")
 
-            user = self.db.exec(
+            user = self.db.execute(
                 select(User).where(User.keycloak_user_id == keycloak_user.user_id)
-            ).first()
+            ).scalar_one_or_none()
 
             if user:
                 updated = False
@@ -106,11 +106,11 @@ class UserService:
         try:
             settings_relationship = getattr(User, "settings")
 
-            user = self.db.exec(
+            user = self.db.execute(
                 select(User)
                 .where(User.id == user_id)
                 .options(joinedload(settings_relationship))
-            ).first()
+            ).scalar_one_or_none()
 
             return user
 

@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from typing import Optional
 
+from pydantic import ConfigDict
 from sqlmodel import Field, SQLModel
 
 
@@ -19,6 +20,7 @@ class BaseModel(SQLModel):
     This ensures all models share the same metadata and configuration.
     """
 
-    class Config:
+    model_config = ConfigDict(
         # Enable SQLModel to work with SQLAlchemy
-        arbitrary_types_allowed = True
+        arbitrary_types_allowed=True
+    )

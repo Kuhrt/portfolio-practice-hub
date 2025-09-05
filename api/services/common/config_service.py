@@ -17,7 +17,9 @@ class ConfigService(BaseConfigService):
     WEB_APP_URL: str = Field(default="http://localhost:3000")
 
     # Data
-    DATABASE_URL: str = Field(default="sqlite:///./app.db")
+    DATABASE_URL: str = Field(
+        default="postgresql://postgres:password@localhost:5432/db"
+    )
     REDIS_URL: str = Field(default="redis://localhost:6379")
 
     # Keycloak

@@ -76,9 +76,9 @@ class UserSettingsService:
     def __get_or_create_user_settings(self, user_id: uuid.UUID) -> UserSettings:
         """Ensures user settings are created if they don't exist"""
         try:
-            settings = self.db.exec(
+            settings = self.db.execute(
                 select(UserSettings).where(UserSettings.user_id == user_id)
-            ).first()
+            ).scalar_one_or_none()
             if not settings:
                 settings = UserSettings(user_id=user_id)
                 self.db.add(settings)
