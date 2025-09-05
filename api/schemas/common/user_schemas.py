@@ -33,10 +33,6 @@ class UserSettingsResponse(BaseModel):
     daily_practice_goal_minutes: int
     weekly_practice_goal_sessions: int
     theme: str
-    dashboard_layout: Dict[str, Any]
-    notification_preferences: Dict[str, bool]
-    spotify_connected: bool
-    spotify_auto_import: bool
     profile_public: bool
     share_practice_stats: bool
     updated_at: Optional[datetime]
@@ -52,9 +48,6 @@ class UserSettingsUpdate(BaseModel):
     daily_practice_goal_minutes: Optional[int] = None
     weekly_practice_goal_sessions: Optional[int] = None
     theme: Optional[str] = None
-    dashboard_layout: Optional[Dict[str, Any]] = None
-    notification_preferences: Optional[Dict[str, bool]] = None
-    spotify_auto_import: Optional[bool] = None
     profile_public: Optional[bool] = None
     share_practice_stats: Optional[bool] = None
 

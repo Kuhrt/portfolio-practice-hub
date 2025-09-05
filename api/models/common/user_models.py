@@ -62,7 +62,7 @@ class User(TimestampMixin, table=True):
     )
 
     # Relationships
-    settings: Optional["UserSettings"] = Relationship(back_populates="user")
+    settings: "UserSettings" = Relationship(back_populates="user")
 
 
 class UserSettings(TimestampMixin, table=True):

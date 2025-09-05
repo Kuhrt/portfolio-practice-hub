@@ -17,6 +17,9 @@ def custom_http_exception_handler(request: Request, exc: Exception) -> JSONRespo
     elif isinstance(exc, RequestValidationError):
         return http_validation_exception_handler(request, exc)
     else:
+        # Check if it's a domain exception that leaked through
+        if hasattr(exc, "__module__") and exc.__module__.startswith("exceptions."):
+            return http_domain_exception_handler(request, exc)
         return http_general_exception_handler(request, exc)
 
 
@@ -56,6 +59,26 @@ def http_validation_exception_handler(
 
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=error_response.model_dump(),
+    )
+
+
+def http_domain_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """Handle domain exceptions that leaked through to HTTP layer"""
+    error_response = ErrorResponse(
+        error=exc.__class__.__name__,
+        message=str(exc),
+        timestamp=datetime.now(timezone.utc).isoformat(),
+        path=str(request.url.path),
+    )
+
+    logger.error(
+        f"Domain exception leaked to HTTP layer on {request.method} {request.url.path}: {str(exc)}",
+        exc_info=True,
+    )
+
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content=error_response.model_dump(),
     )
 

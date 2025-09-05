@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from typing import cast
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -6,7 +7,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from middleware.exception_handlers import custom_http_exception_handler
-from routers import health_router
+from routers import health_router, user_router
+from schemas.common.error_responses import COMMON_ERROR_RESPONSES
 from services import close_redis, config, init_db, init_redis
 from services.common.migration_service import run_migrations
 from utils import get_keycloak_public_keys
@@ -82,6 +84,7 @@ app.add_exception_handler(Exception, custom_http_exception_handler)
 # Include routers
 api_prefix = "/api"
 app.include_router(health_router, prefix=api_prefix)
+app.include_router(user_router, prefix=api_prefix)
 
 if __name__ == "__main__":
     uvicorn.run(
