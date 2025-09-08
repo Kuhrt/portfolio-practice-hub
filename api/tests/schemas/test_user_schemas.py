@@ -1,10 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-import pytest
-from pydantic import ValidationError
-
-from models.common.user_models import SessionType, Theme, User, UserSettings
+from models.common.user_models import User, UserSettings
 from schemas.common import (
     UserProfileResponse,
     UserProfileUpdate,

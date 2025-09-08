@@ -23,6 +23,10 @@ if config.config_file_name is not None:
 
 config.set_main_option("sqlalchemy.url", config_service.DATABASE_URL)
 
+# Import all models to ensure they are registered with SQLModel.metadata
+from models.common import User, UserSettings
+from models.practice import PracticeGoal
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 target_metadata = SQLModel.metadata

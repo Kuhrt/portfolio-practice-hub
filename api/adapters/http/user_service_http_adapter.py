@@ -15,6 +15,7 @@ from schemas.common import (
     UserProfileResponse,
     UserProfileUpdate,
     UserSettingsResponse,
+    UserSettingsUpdate,
     UserWithSettingsResponse,
 )
 from services import (
@@ -105,6 +106,29 @@ class UserServiceHttpAdapter:
             )
         except UserServiceError as e:
             logger.error(f"User service error in update_user_profile: {e.message}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Internal server error",
+            )
+
+    def update_user_settings(
+        self, user_id: uuid.UUID, settings_update: UserSettingsUpdate
+    ) -> UserSettingsResponse:
+        """Update user settings"""
+        try:
+            settings = self._user_settings_service.update_user_settings(
+                user_id, settings_update
+            )
+            return UserSettingsResponse.model_validate(settings)
+        except UserSettingsValidationError as e:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid user settings data: {e.message}",
+            )
+        except UserSettingsServiceError as e:
+            logger.error(
+                f"User settings service error in update_user_settings: {e.message}"
+            )
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal server error",

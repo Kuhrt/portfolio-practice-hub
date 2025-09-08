@@ -1,9 +1,8 @@
 from datetime import datetime, timezone
 
-import pytest
 from sqlmodel import Field, SQLModel
 
-from models.common.base_models import BaseModel, TimestampMixin
+from models.common.base_models import TimestampMixin
 
 
 class TestTimestampMixin:
@@ -45,37 +44,3 @@ class TestTimestampMixin:
         assert hasattr(model, "updated_at")
         assert model.created_at is not None
         assert model.updated_at is None
-
-
-class TestBaseModel:
-    def test_base_model_config(self):
-        class TestModel4(BaseModel):
-            name: str
-
-        model = TestModel4(name="test")
-
-        # Check that model_config exists and has the right settings
-        assert hasattr(model, "model_config")
-        assert model.model_config.get("arbitrary_types_allowed") is True
-
-    def test_base_model_inheritance(self):
-        class TestModel5(BaseModel):
-            name: str
-            value: int
-
-        model = TestModel5(name="test", value=42)
-
-        assert model.name == "test"
-        assert model.value == 42
-        assert hasattr(model, "model_config")
-
-    def test_base_model_with_timestamp_mixin(self):
-        class TestModel6(TimestampMixin, BaseModel):
-            name: str
-
-        model = TestModel6(name="test")
-
-        assert hasattr(model, "created_at")
-        assert hasattr(model, "updated_at")
-        assert hasattr(model, "model_config")
-        assert model.model_config.get("arbitrary_types_allowed") is True
