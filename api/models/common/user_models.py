@@ -10,16 +10,17 @@ from constants import SCHEMA_COMMON, TABLE_USER_SETTINGS, TABLE_USERS
 from .base_models import TimestampMixin
 
 if TYPE_CHECKING:
-    from models.practice import PracticeGoal
+    from models.practice import PracticeGoal, PracticeSession
 
 
 class SessionType(str, Enum):
     """Available session types for music practice"""
 
-    FREE_PLAY = "free_play"
-    STRUCTURED = "structured"
     EXERCISE = "exercise"
-    REPERTOIRE = "repertoire"
+    FREE_PLAY = "free_play"
+    SONG = "song"
+    STRUCTURED = "structured"
+    TECHNIQUE = "technique"
 
 
 class Theme(str, Enum):
@@ -67,6 +68,9 @@ class User(TimestampMixin, table=True):
     # Relationships
     settings: "UserSettings" = Relationship(back_populates="user")
     practice_goals: Optional[list["PracticeGoal"]] = Relationship(back_populates="user")
+    practice_sessions: Optional[list["PracticeSession"]] = Relationship(
+        back_populates="user"
+    )
 
 
 class UserSettings(TimestampMixin, table=True):
