@@ -1,13 +1,17 @@
 import logging
+from typing import List
 
 from fastapi import APIRouter, Depends
 
-from adapters.http.user_service_http_adapter import (
+from adapters.http import (
+    PracticeGoalHTTPAdapter,
     UserServiceHttpAdapter,
+    get_practice_goal_http_adapter,
     get_user_http_service,
 )
 from models.common.user_models import User
 from schemas.common import (
+    UserGoalsResponse,
     UserProfileResponse,
     UserProfileUpdate,
     UserSettingsResponse,
@@ -63,3 +67,12 @@ def get_current_user_all(
 ):
     """Get the current user's profile and settings"""
     return service.get_profile_and_settings_by_user(current_user)
+
+
+@user_router.get("/me/goals", response_model=UserGoalsResponse)
+def get_current_user_practice_goals(
+    current_user: User = Depends(get_current_user),
+    service: PracticeGoalHTTPAdapter = Depends(get_practice_goal_http_adapter),
+):
+    """Get the current user's practice goals"""
+    return UserGoalsResponse(practice_goals=service.get_goals_for_user(current_user.id))
