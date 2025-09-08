@@ -1,13 +1,16 @@
 import uuid
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Field, Relationship
 
 from constants import SCHEMA_COMMON, TABLE_USER_SETTINGS, TABLE_USERS
 
 from .base_models import TimestampMixin
+
+if TYPE_CHECKING:
+    from models.practice import PracticeGoal
 
 
 class SessionType(str, Enum):
@@ -63,6 +66,7 @@ class User(TimestampMixin, table=True):
 
     # Relationships
     settings: "UserSettings" = Relationship(back_populates="user")
+    practice_goals: Optional[list["PracticeGoal"]] = Relationship(back_populates="user")
 
 
 class UserSettings(TimestampMixin, table=True):

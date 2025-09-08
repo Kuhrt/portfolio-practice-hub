@@ -39,9 +39,9 @@ class UserService:
             if not keycloak_user.email:
                 raise UserDataValidationError("Email is required", "email")
 
-            user = self.db.execute(
+            user = self.db.exec(
                 select(User).where(User.keycloak_user_id == keycloak_user.user_id)
-            ).scalar_one_or_none()
+            ).one_or_none()
 
             if user:
                 updated = False
@@ -106,11 +106,11 @@ class UserService:
         try:
             settings_relationship = getattr(User, "settings")
 
-            user = self.db.execute(
+            user = self.db.exec(
                 select(User)
                 .where(User.id == user_id)
                 .options(joinedload(settings_relationship))
-            ).scalar_one_or_none()
+            ).one_or_none()
 
             return user
 

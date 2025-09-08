@@ -1,6 +1,7 @@
 from .error_schemas import ErrorDetail, ErrorResponse
 from .health_schemas import HealthCheckResponse
 from .user_schemas import (
+    UserGoalsResponse,
     UserProfileResponse,
     UserProfileUpdate,
     UserSettingsResponse,
@@ -17,4 +18,5 @@ __all__ = [
     "UserSettingsUpdate",
     "UserProfileUpdate",
     "UserWithSettingsResponse",
+    "UserGoalsResponse",
 ]

@@ -1,8 +1,10 @@
 import uuid
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict
+
+from schemas.practice import PracticeGoalResponse
 
 
 class UserProfileResponse(BaseModel):
@@ -66,3 +68,9 @@ class UserWithSettingsResponse(BaseModel):
 
     profile: UserProfileResponse
     settings: UserSettingsResponse
+
+
+class UserGoalsResponse(BaseModel):
+    """API response model for user goals"""
+
+    practice_goals: List[PracticeGoalResponse]

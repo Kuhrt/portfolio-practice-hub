@@ -1,7 +1,17 @@
-from .schema_constants import SCHEMA_COMMON, TABLE_USER_SETTINGS, TABLE_USERS
+from .schema_constants import (
+    SCHEMA_COMMON,
+    SCHEMA_PRACTICE,
+    TABLE_PRACTICE_GOALS,
+    TABLE_SESSIONS,
+    TABLE_USER_SETTINGS,
+    TABLE_USERS,
+)
 
 __all__ = [
     "SCHEMA_COMMON",
+    "SCHEMA_PRACTICE",
+    "TABLE_PRACTICE_GOALS",
+    "TABLE_SESSIONS",
     "TABLE_USERS",
     "TABLE_USER_SETTINGS",
 ]
