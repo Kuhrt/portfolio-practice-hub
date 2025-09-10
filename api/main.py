@@ -6,7 +6,12 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from middleware.exception_handlers import custom_http_exception_handler
-from routers import health_router, practice_goal_router, user_router
+from routers import (
+    health_router,
+    practice_goal_router,
+    practice_session_router,
+    user_router,
+)
 from services import close_redis, config, init_db, init_redis
 from services.common.migration_service import run_migrations
 from utils import get_keycloak_public_keys
@@ -83,6 +88,7 @@ app.add_exception_handler(Exception, custom_http_exception_handler)
 api_prefix = "/api"
 app.include_router(health_router, prefix=api_prefix)
 app.include_router(practice_goal_router, prefix=api_prefix)
+app.include_router(practice_session_router, prefix=api_prefix)
 app.include_router(user_router, prefix=api_prefix)
 
 if __name__ == "__main__":

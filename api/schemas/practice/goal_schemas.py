@@ -1,9 +1,10 @@
 import uuid
-from typing import Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from pydantic import BaseModel
 
 from models.practice import GoalStatus, PracticeInterval, PracticeTargetType
+from schemas.practice.practice_session_schemas import PracticeSessionResponse
 
 
 class PracticeGoalCreate(BaseModel):
@@ -44,3 +45,4 @@ class PracticeGoalResponse(BaseModel):
     target_type: PracticeTargetType
     target_interval: PracticeInterval
     instrument: Optional[str] = None
+    sessions: Optional[List["PracticeSessionResponse"]] = None
