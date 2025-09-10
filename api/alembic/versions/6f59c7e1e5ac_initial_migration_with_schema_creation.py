@@ -1,7 +1,7 @@
 """Initial migration with schema creation
 
 Revision ID: 6f59c7e1e5ac
-Revises: 
+Revises:
 Create Date: 2025-09-03 16:41:41.539077
 
 """
@@ -9,6 +9,7 @@ Create Date: 2025-09-03 16:41:41.539077
 from typing import Sequence, Union
 
 import sqlalchemy as sa
+import sqlmodel.sql.sqltypes
 
 from alembic import op
 
@@ -30,13 +31,15 @@ def upgrade() -> None:
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("id", sa.Uuid(), nullable=False),
-        sa.Column("keycloak_user_id", sa.String(), nullable=False),
-        sa.Column("email", sa.String(), nullable=False),
-        sa.Column("username", sa.String(), nullable=False),
+        sa.Column(
+            "keycloak_user_id", sqlmodel.sql.sqltypes.AutoString(), nullable=False
+        ),
+        sa.Column("email", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("username", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
         sa.Column("first_name", sa.String(length=100), nullable=True),
         sa.Column("last_name", sa.String(length=100), nullable=True),
         sa.Column("display_name", sa.String(length=200), nullable=True),
-        sa.Column("timezone", sa.String(), nullable=False),
+        sa.Column("timezone", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
         sa.Column("is_active", sa.Boolean(), nullable=False),
         sa.Column("last_login", sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
@@ -68,7 +71,12 @@ def upgrade() -> None:
         sa.Column(
             "default_session_type",
             sa.Enum(
-                "FREE_PLAY", "STRUCTURED", "EXERCISE", "REPERTOIRE", name="sessiontype"
+                "EXERCISE",
+                "FREE_PLAY",
+                "SONG",
+                "STRUCTURED",
+                "TECHNIQUE",
+                name="sessiontype",
             ),
             nullable=False,
         ),

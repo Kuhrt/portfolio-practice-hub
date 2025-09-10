@@ -25,7 +25,7 @@ config.set_main_option("sqlalchemy.url", config_service.DATABASE_URL)
 
 # Import all models to ensure they are registered with SQLModel.metadata
 from models.common import User, UserSettings
-from models.practice import PracticeGoal
+from models.practice import PracticeGoal, PracticeSession
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -55,6 +55,8 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_schemas=True,
+        include_name=include_name,
     )
 
     with context.begin_transaction():
@@ -75,10 +77,23 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            include_schemas=True,
+            include_name=include_name,
+        )
 
         with context.begin_transaction():
             context.run_migrations()
+
+
+def include_name(name, type_, parent_names):
+    if type_ == "schema":
+        # List of schemas to ignore
+        ignored_schemas = ["keycloak"]
+        return name not in ignored_schemas
+    return True
 
 
 if context.is_offline_mode():

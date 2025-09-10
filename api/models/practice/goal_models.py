@@ -6,9 +6,11 @@ from sqlmodel import Field, Relationship
 
 from constants import SCHEMA_COMMON, SCHEMA_PRACTICE, TABLE_PRACTICE_GOALS
 from models.common import TimestampMixin
+from models.practice.link_models import PracticeSessionsGoals
 
 if TYPE_CHECKING:
     from models.common import User
+    from models.practice import PracticeSession
 
 
 class GoalType(str, Enum):
@@ -93,3 +95,6 @@ class PracticeGoal(Goal, table=True):
 
     # Relationships
     user: "User" = Relationship(back_populates="practice_goals")
+    sessions: Optional[list["PracticeSession"]] = Relationship(
+        back_populates="goals", link_model=PracticeSessionsGoals
+    )

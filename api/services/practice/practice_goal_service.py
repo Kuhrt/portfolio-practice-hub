@@ -66,6 +66,8 @@ class PracticeGoalService:
         """Create a practice goal"""
         try:
             goal = PracticeGoal(**goal_create.model_dump())
+            goal.created_at = datetime.now(timezone.utc)
+            goal.updated_at = datetime.now(timezone.utc)
             self.db.add(goal)
             self.db.commit()
             return goal
