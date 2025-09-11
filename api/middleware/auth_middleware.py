@@ -1,6 +1,7 @@
-import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import jwt, jwk as jose_jwk
+from jose.exceptions import JWTError, ExpiredSignatureError
 
 from config import keycloak_config
 from models.auth import KeycloakUser
@@ -38,14 +39,18 @@ def validate_and_decode_jwt(token: str) -> KeycloakUser:
                 detail="Invalid token: key not found",
             )
 
-        # Decode and validate token
+        # Convert JWK to key object for python-jose
+        key = jose_jwk.construct(jwk)
+
+        # Decode and validate token using python-jose
         payload = jwt.decode(
             token,
-            jwk,
+            key,
             algorithms=["RS256"],
             audience=keycloak_config.client_id,
             issuer=keycloak_config.realm_url,
-            options={"verify_exp": True, "verify_aud": True, "verify_iss": True},
+            options={"verify_exp": True,
+                     "verify_aud": False, "verify_iss": True},
         )
 
         # Extract user information
@@ -60,14 +65,14 @@ def validate_and_decode_jwt(token: str) -> KeycloakUser:
             roles=payload.get("realm_access", {}).get("roles", []),
         )
 
-    except jwt.ExpiredSignatureError:
+    except ExpiredSignatureError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired"
-        )
-    except jwt.InvalidTokenError as e:
+        ) from e
+    except JWTError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Invalid token: {str(e)}"
-        )
+        ) from e
 
 
 def get_keycloak_user(

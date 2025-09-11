@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "configurations": [
+    {
+      "name": "debug-web-server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "localRoot": "${workspaceFolder}/web",
+      "cwd": "${workspaceFolder}/web"
+    },
+    {
+      "name": "debug-web-client-side",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "cwd": "${workspaceFolder}/web",
+      "sourceMapPathOverrides": {
+        "webpack:///./web/*": "${workspaceRoot}/web/*"
+      }
+    },
+    {
+      "name": "debug-api",
+      "type": "debugpy",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/api",
+      "program": "main.py"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Web App",
+      "configurations": ["debug-web-server-side", "debug-web-client-side"]
+    },
+    {
+      "name": "Full App",
+      "configurations": [
+        "debug-api",
+        "debug-web-server-side",
+        "debug-web-client-side"
+      ]
+    }
+  ]
+}
