@@ -1,12 +1,10 @@
 'use client';
 
 import {
-  IconChartBar,
-  IconDashboard,
-  IconFolder,
-  IconListDetails,
+  IconLayoutDashboard,
   IconMusicHeart,
-  IconUsers
+  IconPennant,
+  IconVinyl
 } from '@tabler/icons-react';
 
 import { ProgressLink } from '@/components/ui/links/progress-link';
@@ -30,28 +28,18 @@ export function DashboardSidebar({
   const items: NavItem[] = [
     {
       title: 'Dashboard',
-      url: '#',
-      icon: IconDashboard
+      url: '/',
+      icon: IconLayoutDashboard
     },
     {
-      title: 'Lifecycle',
-      url: '#',
-      icon: IconListDetails
+      title: 'Sessions',
+      url: '/sessions',
+      icon: IconVinyl
     },
     {
-      title: 'Analytics',
-      url: '#',
-      icon: IconChartBar
-    },
-    {
-      title: 'Projects',
-      url: '#',
-      icon: IconFolder
-    },
-    {
-      title: 'Team',
-      url: '#',
-      icon: IconUsers
+      title: 'Goals',
+      url: '/goals',
+      icon: IconPennant
     }
   ];
 

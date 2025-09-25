@@ -3,10 +3,12 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Noto_Sans, Noto_Sans_Mono } from 'next/font/google';
 import { Suspense } from 'react';
+import { Toaster } from 'sonner';
 
 import Providers from '@/components/providers/Providers';
 import AppProgressBar from '@/components/ui/progress/app-progress-bar';
 import { NProgressDone } from '@/components/ui/progress/nprogress-done';
+import ConfigService from '@/services/ConfigService';
 
 const fontSans = Noto_Sans({
   variable: '--font-noto-sans',
@@ -29,6 +31,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const appConfig = ConfigService.getServerConfig();
   return (
     <html
       lang="en"
@@ -37,7 +40,10 @@ export default function RootLayout({
     >
       <body>
         <AppProgressBar />
-        <Providers>{children}</Providers>
+        <Providers refetchInterval={appConfig.session.refetchInterval}>
+          {children}
+        </Providers>
+        <Toaster richColors theme="dark" />
         <Suspense fallback={null}>
           <NProgressDone />
         </Suspense>

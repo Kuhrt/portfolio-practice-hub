@@ -9,6 +9,7 @@ from schemas.practice import (
     PracticeSessionResponse,
     PracticeSessionUpdate,
 )
+
 from services.practice import PracticeSessionService, get_practice_session_service
 
 logger = logging.getLogger(__name__)
@@ -26,22 +27,35 @@ class PracticeSessionHTTPAdapter:
             session = self._session_service.get_practice_session(session_id)
             return PracticeSessionResponse.model_validate(session)
         except PracticeSessionNotFoundError as e:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
         except Exception as e:
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(
+                    e)
             )
+
+    def get_active_session(self, user_id: uuid.UUID) -> PracticeSessionResponse | None:
+        """Get the active practice session for the user"""
+        try:
+            session = self._session_service.get_current_active_session(user_id)
+            return PracticeSessionResponse.model_validate(session.model_dump()) if session else None
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     def create_session(
         self, session_create: PracticeSessionCreate
     ) -> PracticeSessionResponse:
         """Create a practice session"""
         try:
-            session = self._session_service.create_practice_session(session_create)
-            return PracticeSessionResponse.model_validate(session)
+            session = self._session_service.create_practice_session(
+                session_create)
+            return PracticeSessionResponse.model_validate(session.model_dump())
         except Exception as e:
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(
+                    e)
             )
 
     def update_session(
@@ -52,12 +66,14 @@ class PracticeSessionHTTPAdapter:
             session = self._session_service.update_practice_session(
                 session_id, session_update
             )
-            return PracticeSessionResponse.model_validate(session)
+            return PracticeSessionResponse.model_validate(session.model_dump())
         except PracticeSessionNotFoundError as e:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
         except Exception as e:
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(
+                    e)
             )
 
     def delete_session(self, session_id: uuid.UUID) -> None:
@@ -65,10 +81,26 @@ class PracticeSessionHTTPAdapter:
         try:
             self._session_service.delete_practice_session(session_id)
         except PracticeSessionNotFoundError as e:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
         except Exception as e:
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(
+                    e)
+            )
+
+    def end_session(self, session_id: uuid.UUID) -> PracticeSessionResponse:
+        """End a practice session"""
+        try:
+            session = self._session_service.end_practice_session(session_id)
+            return PracticeSessionResponse.model_validate(session.model_dump())
+        except PracticeSessionNotFoundError as e:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(
+                    e)
             )
 
 

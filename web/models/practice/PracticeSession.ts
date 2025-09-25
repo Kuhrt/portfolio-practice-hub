@@ -1,5 +1,6 @@
 export interface PracticeSessionCreate {
-  started_at?: string;
+  user_id?: string;
+  description?: string;
   session_type: SessionType;
   tempo?: number;
   difficulty_level?: number;
@@ -9,8 +10,9 @@ export interface PracticeSessionCreate {
 }
 
 export interface PracticeSessionUpdate {
+  description?: string;
   started_at?: string;
-  ended_at?: string;
+  stopped_at?: string;
   session_type?: SessionType;
   tempo?: number;
   difficulty_level?: number;
@@ -21,8 +23,10 @@ export interface PracticeSessionUpdate {
 
 export interface PracticeSession {
   id: string;
+  description?: string;
   started_at: string;
-  ended_at: string;
+  stopped_at: string;
+  duration: number;
   session_type: SessionType;
   tempo?: number;
   difficulty_level?: number;
@@ -32,8 +36,9 @@ export interface PracticeSession {
 }
 
 export enum SessionType {
-  PRACTICE = 'practice',
-  REHEARSAL = 'rehearsal',
-  PERFORMANCE = 'performance',
-  LESSON = 'lesson'
+  EXERCISE = 'exercise',
+  FREE_PLAY = 'free_play',
+  SONG = 'song',
+  STRUCTURED = 'structured',
+  TECHNIQUE = 'technique'
 }

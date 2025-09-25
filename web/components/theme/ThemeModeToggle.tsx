@@ -1,6 +1,8 @@
 'use client';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Moon, Sun } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import * as React from 'react';
 
@@ -11,9 +13,28 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { userKeys } from '@/constants/query-keys/user';
+import { PracticeApi } from '@/services/api/practice';
 
 export function ThemeModeToggle() {
+  const { data: session } = useSession();
   const { setTheme } = useTheme();
+  const queryClient = useQueryClient();
+
+  const { mutate: saveTheme } = useMutation({
+    mutationFn: (theme: 'light' | 'dark' | 'system') =>
+      new PracticeApi({ token: session?.accessToken }).users.updateSettings({
+        theme
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.currentSettings });
+    }
+  });
+
+  const onThemeChange = (theme: 'light' | 'dark' | 'system') => {
+    setTheme(theme);
+    saveTheme(theme);
+  };
 
   return (
     <DropdownMenu>
@@ -29,13 +50,13 @@ export function ThemeModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>
+        <DropdownMenuItem onClick={() => onThemeChange('light')}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
+        <DropdownMenuItem onClick={() => onThemeChange('dark')}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
+        <DropdownMenuItem onClick={() => onThemeChange('system')}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>

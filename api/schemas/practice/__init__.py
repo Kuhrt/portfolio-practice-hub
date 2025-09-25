@@ -3,6 +3,7 @@ from .practice_session_schemas import (
     PracticeSessionCreate,
     PracticeSessionResponse,
     PracticeSessionUpdate,
+    PracticeSessionStart,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "PracticeSessionCreate",
     "PracticeSessionUpdate",
     "PracticeSessionResponse",
+    "PracticeSessionStart",
 ]

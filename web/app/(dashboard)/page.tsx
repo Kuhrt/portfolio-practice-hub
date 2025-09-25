@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function HomePage() {
   return (
-    <DashboardInsetLayout title="Dashboard" className="px-4 lg:px-6">
+    <DashboardInsetLayout title="Dashboard" className="p-4 lg:p-6">
       <Card className="@container/card">
         <CardHeader>
           <CardTitle>Welcome to Practice Hub</CardTitle>

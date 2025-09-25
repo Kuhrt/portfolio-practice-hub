@@ -1,10 +1,8 @@
 'use client';
 
 import {
-  IconCreditCard,
   IconDotsVertical,
   IconLogout,
-  IconNotification,
   IconUserCircle
 } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
@@ -89,14 +87,14 @@ export function NavUser() {
             <IconUserCircle />
             Account
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <IconCreditCard />
             Billing
           </DropdownMenuItem>
           <DropdownMenuItem>
             <IconNotification />
             Notifications
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
 

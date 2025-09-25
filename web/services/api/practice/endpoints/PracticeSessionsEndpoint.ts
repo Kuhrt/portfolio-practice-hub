@@ -51,6 +51,16 @@ export class PracticeSessionsEndpoint extends BaseEndpoint {
   }
 
   /**
+   * Get active session for the current user
+   * @return {Promise<PracticeSession | null>}
+   */
+  public async getActiveSession(): Promise<PracticeSession | null> {
+    const res = await this.get('active');
+    await this._api.checkForError(res);
+    return await res.json();
+  }
+
+  /**
    * Update a practice session
    * @param {string} sessionId - The session ID
    * @param {PracticeSessionUpdate} sessionData - The updated session data
@@ -73,5 +83,16 @@ export class PracticeSessionsEndpoint extends BaseEndpoint {
   public async delete(sessionId: string): Promise<void> {
     const res = await this.deleteRequest(sessionId);
     await this._api.checkForError(res);
+  }
+
+  /**
+   * End a practice session
+   * @param {string} sessionId - The session ID
+   * @return {Promise<PracticeSession>}
+   */
+  public async end(sessionId: string): Promise<PracticeSession> {
+    const res = await this.post(`${sessionId}/end`);
+    await this._api.checkForError(res);
+    return await res.json();
   }
 }

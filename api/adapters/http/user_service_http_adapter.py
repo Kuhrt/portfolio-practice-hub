@@ -54,7 +54,8 @@ class UserServiceHttpAdapter:
                 detail=f"Invalid user data: {e.message}",
             )
         except UserServiceError as e:
-            logger.error(f"User service error in get_profile_and_settings: {e.message}")
+            logger.error(
+                f"User service error in get_profile_and_settings: {e.message}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal server error",
@@ -64,7 +65,8 @@ class UserServiceHttpAdapter:
         """Get user by User object"""
         try:
             if not user.settings:
-                user.settings = self._user_settings_service.get_user_settings(user.id)
+                user.settings = self._user_settings_service.get_user_settings(
+                    user.id)
             return self.__map_user_and_settings_to_response(user)
 
         except UserSettingsValidationError as e:
@@ -86,7 +88,8 @@ class UserServiceHttpAdapter:
     ) -> User:
         """Update user data in their profile"""
         try:
-            user = self._user_service.update_user_profile(user_id, profile_update)
+            user = self._user_service.update_user_profile(
+                user_id, profile_update)
             if not user:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
@@ -105,7 +108,8 @@ class UserServiceHttpAdapter:
                 detail=f"Invalid user data: {e.message}",
             )
         except UserServiceError as e:
-            logger.error(f"User service error in update_user_profile: {e.message}")
+            logger.error(
+                f"User service error in update_user_profile: {e.message}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal server error",
@@ -145,7 +149,8 @@ class UserServiceHttpAdapter:
 # FastAPI Dependencies
 def get_user_http_service(
     user_service: UserService = Depends(get_user_service),
-    user_settings_service: UserSettingsService = Depends(get_user_settings_service),
+    user_settings_service: UserSettingsService = Depends(
+        get_user_settings_service),
 ) -> UserServiceHttpAdapter:
     """Get the user service HTTP adapter"""
     return UserServiceHttpAdapter(user_service, user_settings_service)

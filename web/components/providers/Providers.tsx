@@ -18,17 +18,17 @@ export default function Providers({ children, refetchInterval = 0 }: Props) {
   const queryClient = getQueryClient(isServer);
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <SessionProvider refetchInterval={refetchInterval}>
-        <QueryClientProvider client={queryClient}>
+    <SessionProvider refetchInterval={refetchInterval}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
-        </QueryClientProvider>
-      </SessionProvider>
-    </ThemeProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </SessionProvider>
   );
 }
