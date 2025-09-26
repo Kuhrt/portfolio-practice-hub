@@ -32,6 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const appConfig = ConfigService.getServerConfig();
+
   return (
     <html
       lang="en"

@@ -18,7 +18,7 @@ export default function Providers({ children, refetchInterval = 0 }: Props) {
   const queryClient = getQueryClient(isServer);
 
   return (
-    <SessionProvider refetchInterval={refetchInterval}>
+    <SessionProvider refetchInterval={refetchInterval / 1000}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider
           attribute="class"

@@ -9,6 +9,8 @@ import {
 } from '@/components/ui/sidebar';
 import { NavItem } from '@/models/navigation/NavItem';
 
+import { ProgressLink } from '../ui/links/progress-link';
+
 interface Props {
   items: NavItem[];
 }
@@ -30,9 +32,15 @@ export default function NavMain({ items }: Props) {
             </SidebarMenuItem>
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  isActive={item.isActive}
+                  asChild
+                >
+                  <ProgressLink href={item.url}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </ProgressLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

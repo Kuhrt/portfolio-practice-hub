@@ -4,5 +4,5 @@ export interface NavItem {
   title: string;
   icon: Icon;
   url: string;
-  active?: boolean;
+  isActive?: boolean;
 }

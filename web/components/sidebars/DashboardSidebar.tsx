@@ -6,6 +6,7 @@ import {
   IconPennant,
   IconVinyl
 } from '@tabler/icons-react';
+import { usePathname } from 'next/navigation';
 
 import { ProgressLink } from '@/components/ui/links/progress-link';
 import {
@@ -25,21 +26,25 @@ import { NavUser } from '../navigation/NavUser';
 export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
   const items: NavItem[] = [
     {
       title: 'Dashboard',
       url: '/',
-      icon: IconLayoutDashboard
+      icon: IconLayoutDashboard,
+      isActive: pathname === '/'
     },
     {
       title: 'Sessions',
-      url: '/sessions',
-      icon: IconVinyl
+      url: '/timer',
+      icon: IconVinyl,
+      isActive: pathname === '/timer'
     },
     {
       title: 'Goals',
       url: '/goals',
-      icon: IconPennant
+      icon: IconPennant,
+      isActive: pathname === '/goals'
     }
   ];
 
