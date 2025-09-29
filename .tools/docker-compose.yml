@@ -1,7 +1,7 @@
 name: practice-hub-tools
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:16
     container_name: practice-hub-postgres
     restart: no
     ports:
@@ -52,7 +52,9 @@ services:
     restart: no
     ports:
       - 6379:6379
-    command: ['redis-server', '--save', '60', '1', '--loglevel', 'warning']
+    environment:
+      - REDIS_PASSWORD=your_strong_password
+    command: ['redis-server', '--save', '60', '1', '--loglevel', 'warning', '--requirepass', 'your_strong_password']
     volumes:
       - ./redis-data:/data
     depends_on:
