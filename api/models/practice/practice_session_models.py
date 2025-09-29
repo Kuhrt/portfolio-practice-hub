@@ -19,11 +19,14 @@ class PracticeSession(TimestampMixin, table=True):
     __tablename__ = TABLE_PRACTICE_SESSIONS  # type: ignore
     __table_args__ = {"schema": SCHEMA_PRACTICE}
 
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, index=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4,
+                          primary_key=True, index=True)
     user_id: uuid.UUID = Field(foreign_key=f"{SCHEMA_COMMON}.users.id")
 
+    description: Optional[str] = Field(default=None)
     started_at: Optional[datetime] = Field(default=None)
-    ended_at: Optional[datetime] = Field(default=None)
+    stopped_at: Optional[datetime] = Field(default=None)
+    duration: Optional[int] = Field(default=0)
     session_type: SessionType = Field(default=SessionType.FREE_PLAY)
     tempo: Optional[int] = Field(default=None)
     difficulty_level: Optional[int] = Field(default=None, ge=1, le=10)

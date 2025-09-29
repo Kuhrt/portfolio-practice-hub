@@ -17,4 +17,4 @@ def get_keycloak_public_keys():
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=f"Unable to fetch Keycloak public keys: {str(e)}",
-        )
+        ) from e
