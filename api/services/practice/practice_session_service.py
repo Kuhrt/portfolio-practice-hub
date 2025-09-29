@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import redis
 from fastapi import Depends
 from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import Session, select
+from sqlmodel import Session, desc, select
 
 from exceptions.practice import (
     PracticeSessionNotFoundError,
@@ -22,6 +22,18 @@ class PracticeSessionService:
     def __init__(self, db_session: Session, redis_client: redis.Redis):
         self.db = db_session
         self.redis = redis_client
+
+    def get_all_practice_sessions(self, user_id: uuid.UUID) -> list[PracticeSession]:
+        """Get all practice sessions for a user"""
+        try:
+            sessions = self.db.exec(select(PracticeSession).where(
+                PracticeSession.user_id == user_id).order_by(desc(PracticeSession.started_at))).all()
+            return list(sessions)
+        except SQLAlchemyError as e:
+            logger.error(
+                "Database error in get_all_practice_sessions: %s", str(e))
+            raise PracticeSessionServiceError(
+                f"Failed to get all practice sessions: {str(e)}")
 
     def get_practice_session(self, session_id: uuid.UUID) -> PracticeSession:
         """Get a practice session by ID"""

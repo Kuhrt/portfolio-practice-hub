@@ -22,7 +22,7 @@ practice_goal_router = APIRouter(
 )
 
 
-@practice_goal_router.post("/", response_model=PracticeGoalResponse)
+@practice_goal_router.post("", response_model=PracticeGoalResponse)
 def create_practice_goal(
     practice_goal_create: PracticeGoalCreate,
     service: PracticeGoalHTTPAdapter = Depends(get_practice_goal_http_adapter),

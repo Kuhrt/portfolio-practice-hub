@@ -1,4 +1,5 @@
 import { DashboardInsetLayout } from '@/components/layouts/dashboard/DashboardInsetLayout';
+import SessionsTableCard from '@/components/practice/session/SessionsTableCard';
 import TimerBar from '@/components/practice/TimerBar';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -26,6 +27,7 @@ export default function TimerPage() {
           <TimerBar />
         </CardContent>
       </Card>
+      <SessionsTableCard />
     </DashboardInsetLayout>
   );
 }

@@ -1,5 +1,3 @@
-import { IconCirclePlusFilled } from '@tabler/icons-react';
-
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -9,6 +7,7 @@ import {
 } from '@/components/ui/sidebar';
 import { NavItem } from '@/models/navigation/NavItem';
 
+import NewSessionMenuButton from '../practice/session/NewSessionMenuButton';
 import { ProgressLink } from '../ui/links/progress-link';
 
 interface Props {
@@ -22,13 +21,7 @@ export default function NavMain({ items }: Props) {
         <nav aria-label="Main navigation">
           <SidebarMenu>
             <SidebarMenuItem className="flex items-center gap-2">
-              <SidebarMenuButton
-                tooltip="Start Session"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
-              >
-                <IconCirclePlusFilled />
-                <span>Start Session</span>
-              </SidebarMenuButton>
+              <NewSessionMenuButton />
             </SidebarMenuItem>
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>

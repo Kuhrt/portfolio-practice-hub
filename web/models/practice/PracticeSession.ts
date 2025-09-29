@@ -42,3 +42,11 @@ export enum SessionType {
   STRUCTURED = 'structured',
   TECHNIQUE = 'technique'
 }
+
+export const SessionTypeLabel = new Map<SessionType, string>([
+  [SessionType.EXERCISE, 'Exercise'],
+  [SessionType.FREE_PLAY, 'Free Play'],
+  [SessionType.SONG, 'Song'],
+  [SessionType.STRUCTURED, 'Structured'],
+  [SessionType.TECHNIQUE, 'Technique']
+]);

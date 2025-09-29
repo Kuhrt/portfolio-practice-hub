@@ -23,7 +23,16 @@ practice_session_router = APIRouter(
 )
 
 
-@practice_session_router.post("/", response_model=PracticeSessionResponse)
+@practice_session_router.get("", response_model=list[PracticeSessionResponse])
+def get_all_practice_sessions(
+    service: PracticeSessionHTTPAdapter = Depends(
+        get_practice_session_http_adapter),
+    user: User = Depends(get_current_user),
+):
+    return service.get_all_sessions(user.id)
+
+
+@practice_session_router.post("", response_model=PracticeSessionResponse)
 def create_practice_session(
     practice_session_create: PracticeSessionCreate,
     service: PracticeSessionHTTPAdapter = Depends(

@@ -18,6 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar';
+import { ROUTES } from '@/constants/navigation';
 import { NavItem } from '@/models/navigation/NavItem';
 
 import NavMain from '../navigation/NavMain';
@@ -30,21 +31,21 @@ export function DashboardSidebar({
   const items: NavItem[] = [
     {
       title: 'Dashboard',
-      url: '/',
+      url: ROUTES.HOME,
       icon: IconLayoutDashboard,
-      isActive: pathname === '/'
+      isActive: pathname === ROUTES.HOME
     },
     {
       title: 'Sessions',
-      url: '/timer',
+      url: ROUTES.SESSIONS,
       icon: IconVinyl,
-      isActive: pathname === '/timer'
+      isActive: pathname === ROUTES.SESSIONS
     },
     {
       title: 'Goals',
-      url: '/goals',
+      url: ROUTES.GOALS,
       icon: IconPennant,
-      isActive: pathname === '/goals'
+      isActive: pathname === ROUTES.GOALS
     }
   ];
 
@@ -57,7 +58,7 @@ export function DashboardSidebar({
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <ProgressLink href="#">
+              <ProgressLink href={ROUTES.HOME}>
                 <IconMusicHeart className="!size-5 text-primary" />
                 <span className="text-base font-semibold">Practice Hub</span>
               </ProgressLink>

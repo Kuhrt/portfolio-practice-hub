@@ -21,6 +21,15 @@ class PracticeSessionHTTPAdapter:
     def __init__(self, practice_session_service: PracticeSessionService):
         self._session_service = practice_session_service
 
+    def get_all_sessions(self, user_id: uuid.UUID) -> list[PracticeSessionResponse]:
+        """Get all practice sessions for a user"""
+        try:
+            sessions = self._session_service.get_all_practice_sessions(user_id)
+            return [PracticeSessionResponse.model_validate(session.model_dump()) for session in sessions]
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
     def get_session(self, session_id: uuid.UUID) -> PracticeSessionResponse:
         """Get a practice session by ID"""
         try:

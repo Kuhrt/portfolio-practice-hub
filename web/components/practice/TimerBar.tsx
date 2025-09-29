@@ -4,9 +4,10 @@ import {
   IconPlayerPlayFilled,
   IconPlayerStopFilled
 } from '@tabler/icons-react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 import { practiceKeys } from '@/constants/query-keys/practice';
@@ -18,41 +19,33 @@ import {
   SessionType
 } from '@/models/practice';
 import { PracticeApi } from '@/services/api/practice';
-import usePracticeStore from '@/stores/practiceStore';
 import { getErrorMessage } from '@/utils/errors';
+import { isSessionActive } from '@/utils/practice/sessions';
 
 const descriptionId = 'practice-description';
 
 export default function TimerBar() {
   const { data: session } = useSession();
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const practiceApi = new PracticeApi({ token: session?.accessToken });
-  const { activeSession, setActiveSession } = usePracticeStore();
+
+  const { data: activeSession, isPending: gettingActiveSession } = useQuery({
+    queryKey: practiceKeys.activeSession,
+    queryFn: () => practiceApi.sessions.getActiveSession(),
+    enabled: !!session?.accessToken
+  });
 
   const [description, setDescription] = useState(
     activeSession?.description || ''
   );
   const debouncedDescription = useDebounce(description, 500);
 
-  const updateDescription = useCallback(
-    (newDescription: string) => {
-      if (activeSession) {
-        setActiveSession({
-          ...activeSession,
-          description: newDescription
-        });
-      }
-    },
-    [activeSession, setActiveSession]
+  const isActive = useMemo(
+    () => isSessionActive(activeSession),
+    [activeSession]
   );
-
-  const isActive = !!activeSession?.started_at && !activeSession?.stopped_at;
   const elapsedTime = useTimer(activeSession?.started_at, isActive);
-
-  const { data: practiceSession, isPending: gettingActiveSession } = useQuery({
-    queryKey: practiceKeys.activeSession,
-    queryFn: () => practiceApi.sessions.getActiveSession(),
-    enabled: !!session?.accessToken
-  });
 
   const { mutate: createSession, isPending: isCreatingSession } = useMutation({
     mutationFn: (sessionData: PracticeSessionCreate) =>
@@ -63,7 +56,9 @@ export default function TimerBar() {
       });
     },
     onSuccess: (session, initialData) => {
-      setActiveSession(session);
+      queryClient.invalidateQueries({ queryKey: practiceKeys.activeSession });
+      queryClient.invalidateQueries({ queryKey: practiceKeys.sessions });
+      router.refresh();
       if (!initialData.description) {
         const descriptionField = document.getElementById(descriptionId);
         if (descriptionField) {
@@ -83,8 +78,14 @@ export default function TimerBar() {
         description: getErrorMessage(error)
       });
     },
-    onSuccess: () => {
+    onSuccess: (_, { sessionId }) => {
       toast.success('Session updated.');
+      queryClient.invalidateQueries({ queryKey: practiceKeys.activeSession });
+      queryClient.invalidateQueries({ queryKey: practiceKeys.sessions });
+      queryClient.invalidateQueries({
+        queryKey: practiceKeys.session(sessionId)
+      });
+      router.refresh();
     }
   });
 
@@ -95,9 +96,14 @@ export default function TimerBar() {
         description: getErrorMessage(error)
       });
     },
-    onSuccess: () => {
+    onSuccess: (_, sessionId) => {
       toast.success('Session ended.');
-      setActiveSession(null);
+      queryClient.invalidateQueries({ queryKey: practiceKeys.activeSession });
+      queryClient.invalidateQueries({ queryKey: practiceKeys.sessions });
+      queryClient.invalidateQueries({
+        queryKey: practiceKeys.session(sessionId)
+      });
+      router.refresh();
     }
   });
 
@@ -105,7 +111,7 @@ export default function TimerBar() {
     if (gettingActiveSession) return;
     e.preventDefault();
 
-    if (isActive) {
+    if (isActive && !!activeSession) {
       endSession(activeSession.id);
     } else {
       createSession({
@@ -120,13 +126,6 @@ export default function TimerBar() {
     isCreatingSession ||
     isUpdatingSession ||
     isEndingSession;
-
-  // Update the active session in the store if there is already one
-  useEffect(() => {
-    if (practiceSession) {
-      setActiveSession(practiceSession);
-    }
-  }, [practiceSession, setActiveSession]);
 
   // Sync local description state with activeSession when it changes
   useEffect(() => {
@@ -143,22 +142,13 @@ export default function TimerBar() {
       debouncedDescription !== activeSession.description &&
       debouncedDescription.trim() !== ''
     ) {
-      // Update the store immediately for UI responsiveness
-      updateDescription(debouncedDescription);
-
       // Update the session on the server
       updateSession({
         sessionId: activeSession.id,
         sessionData: { description: debouncedDescription }
       });
     }
-  }, [
-    debouncedDescription,
-    isActive,
-    activeSession,
-    updateSession,
-    updateDescription
-  ]);
+  }, [debouncedDescription, isActive, activeSession, updateSession]);
 
   return (
     <form className="flex items-center gap-2 lg:gap-4" onSubmit={onSubmit}>
